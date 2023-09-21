@@ -1,0 +1,33 @@
+directive @auth(permissions: [String!]) on FIELD_DEFINITION | OBJECT
+
+type Query {
+  # Public health endpoint
+  health: stringResponse @auth(permissions: ["self:anyone"])
+
+  # Sorted History endpoint
+  history: [History] @auth(permissions: ["self:anyone"])
+}
+
+type Mutation {
+  # Clear collection
+  clear(check: Boolean): stringResponse @auth(permissions: ["self:anyone"])
+
+  # Add Mutation
+  addText(text: String): [AddText] @auth(permissions: ["self:anyone"])
+}
+
+scalar Date
+
+type stringResponse @auth(permissions: ["self:anyone"]) {
+  str: String
+}
+
+type History @auth(permissions: ["self:anyone"]) {
+  name: String
+  createdAt: Date
+}
+
+type AddText @auth(permissions: ["self:anyone"]) {
+  text: String
+  value: Int
+}
